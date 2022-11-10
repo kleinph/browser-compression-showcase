@@ -1,0 +1,10 @@
+<input type="file" class="file-upload" (change)="onFileSelected($event)">
+<div *ngIf="file">{{file?.size | filesize}}</div>
+
+
+<h2>Compression Stream API</h2>
+<button (click)="compressCompressionStream()">Compress</button>
+
+<div *ngIf="compressing">COMPRESSING</div>
+<div *ngIf="size">{{size | filesize}}</div>
+<a *ngIf="downloadUrl" [href]="downloadUrl" [download]="downloadName">Compressed</a>
