@@ -27,15 +27,21 @@ export class AppComponent {
     }
   }
 
-  compressCompressionStream() {
+  async compressCompressionStream() {
     this.compressing = true;
 
     const compressed = this.file
       .stream()
-      .pipeThrough(new CompressionStream('deflate'));
+      .pipeThrough(new CompressionStream('gzip'));
+    
+    // A stream cannot be used in a request in FF, so get a blob via Response, 
+    // see: https://bugzilla.mozilla.org/show_bug.cgi?id=1387483#c5
+    const response = new Response(compressed);
+    const blob = await response.blob();
+    
     const request = new Request('uploadUrl', {
       method: 'POST',
-      body: compressed,
+      body: blob,
       // for Chrome
       duplex: 'half',
     } as RequestInit);
